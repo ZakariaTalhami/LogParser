@@ -1,0 +1,25 @@
+2018-07-10 12:05:51 ERROR LoggerSingleton:33 - LogService save(logEntry) Failed, No EntityManager with actual transaction available for current thread - cannot reliably process 'persist' call
+2018-07-10 12:14:20 ERROR LoggerSingleton:35 - LogService save(logEntry) Failed, No EntityManager with actual transaction available for current thread - cannot reliably process 'persist' call
+2018-07-10 12:14:20 ERROR LoggerSingleton:35 - LogService save(logEntry) Failed, No EntityManager with actual transaction available for current thread - cannot reliably process 'persist' call
+2018-07-10 12:14:20 ERROR LoggerSingleton:35 - LogService save(logEntry) Failed, No EntityManager with actual transaction available for current thread - cannot reliably process 'persist' call
+2018-07-10 12:14:20 ERROR LoggerSingleton:35 - LogService save(logEntry) Failed, No EntityManager with actual transaction available for current thread - cannot reliably process 'persist' call
+2018-07-10 12:14:20 ERROR LoggerSingleton:35 - LogService save(logEntry) Failed, No EntityManager with actual transaction available for current thread - cannot reliably process 'persist' call
+2018-07-10 15:43:22 ERROR LoggerSingleton:77 - LogService  findErrorById(14153) Failed. org.hibernate.hql.internal.ast.QuerySyntaxException: unexpected token: * near line 1, column 8 [select * from com.example.demo.model.LogEntryError]
+2018-07-10 15:44:37 ERROR LoggerSingleton:77 - LogService  findErrorById(14153) Failed. org.hibernate.hql.internal.ast.QuerySyntaxException: unexpected token: from near line 1, column 9 [select  from com.example.demo.model.LogEntryError]
+2018-07-10 15:47:48 ERROR LoggerSingleton:77 - LogService  findErrorById(14153) Failed. Index: 0, Size: 0
+2018-07-11 10:21:16 ERROR LoggerSingleton:39 - LogService save(logEntry) Failed, org.hibernate.exception.DataException: could not execute statement
+2018-07-11 10:31:56 ERROR LoggerSingleton:39 - LogService save(logEntry) Failed, org.hibernate.exception.DataException: could not execute statement
+2018-07-11 12:08:51 ERROR LoggerSingleton:60 - LogService findAll() failed, org.hibernate.QueryException: unexpected char: ';' [select log_id , log_time from log_entries limit 10;]
+2018-07-11 12:12:17 ERROR LoggerSingleton:61 - LogService findAll() failed, org.hibernate.QueryException: unexpected char: ';' [select log_id , log_time from log_entries;]
+2018-07-11 12:12:45 ERROR LoggerSingleton:61 - LogService findAll() failed, org.hibernate.hql.internal.ast.QuerySyntaxException: log_entries is not mapped [select log_id , log_time from log_entries]
+2018-07-11 12:13:51 ERROR LoggerSingleton:61 - LogService findAll() failed, org.hibernate.hql.internal.ast.QuerySyntaxException: LogEntries is not mapped [select log_id , log_time from LogEntries]
+2018-07-11 12:15:03 ERROR LoggerSingleton:61 - LogService findAll() failed, org.hibernate.QueryException: No data type for node: org.hibernate.hql.internal.ast.tree.IdentNode 
+ +-[IDENT] IdentNode: 'log_id' {originalText=log_id}
+ [select log_id , log_time from com.example.demo.model.LogEntry]
+2018-07-11 12:16:01 ERROR LoggerSingleton:61 - LogService findAll() failed, org.hibernate.hql.internal.ast.QuerySyntaxException: unexpected token: from near line 1, column 9 [select  from com.example.demo.model.LogEntry]
+2018-07-11 14:53:50 ERROR LoggerSingleton:129 - Failed the test
+2018-07-11 14:54:39 ERROR LoggerSingleton:129 - Failed the test,  No EntityManager with actual transaction available for current thread - cannot reliably process 'persist' call
+2018-07-11 16:20:53,169 ERROR LoggerSingleton:74 - LogService findAll() failed, org.hibernate.exception.SQLGrammarException: could not extract ResultSet
+2018-07-11 16:24:42,107 ERROR LoggerSingleton:74 - LogService findAll() failed, org.hibernate.QueryException: unexpected char: ';' [select a from com.example.demo.model.LogEntry a where a.process like ;wantedThread]
+2018-07-12 09:52:23,326 ERROR LoggerSingleton:67 - ServiceService findByName(name3) executed successfully.
+2018-07-12 10:04:41,676 ERROR LoggerSingleton:32 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
