@@ -78,8 +78,8 @@ public class ServiceService implements ServiceDAO {
 		boolean found = false;
 		int count = 0;
 		try {
-			count = ((Long) entityManager.createQuery("select count(*) from Services a ").getResultList().get(0))
-					.intValue();
+			count = ((Long) entityManager.createQuery("select count(*) from Services a where a.name like :name")
+					.setParameter("name", name).getResultList().get(0)).intValue();
 			if (count != 0) {
 				found = true;
 			}
@@ -94,17 +94,24 @@ public class ServiceService implements ServiceDAO {
 	@Transactional
 	public List<ServiceModel> updateServiceList() {
 		List<ServiceModel> list = null;
+		String fileName = "";
 		try {
 			File folder = new File("log");
 			File[] fileList = folder.listFiles();
 			for (int i = 0; i < fileList.length; i++) {
+				fileName = fileList[i].getName().split("\\.")[0];
 				if (fileList[i].isFile()) {
-					saveService(new ServiceModel(fileList[i].getName()));
-					logger.info(getClass().getSimpleName() + " updateServiceList() executed successfully, returned "
-							+ fileList[i].getName());
+					if (!exist(fileName)) {
+						saveService(new ServiceModel(fileName));
+						logger.info(getClass().getSimpleName() + " updateServiceList() executed successfully, returned "
+								+ fileName);
+					} else {
+						logger.warn(getClass().getSimpleName()
+								+ " updateServiceList() executed successfully, file already exits " + fileName);
+					}
 				} else if (fileList[i].isDirectory()) {
 					/*
-					 * Can make it recursive and let it cascade through the directories 
+					 * Can make it recursive and let it cascade through the directories
 					 */
 				}
 

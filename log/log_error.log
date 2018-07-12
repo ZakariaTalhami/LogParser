@@ -23,3 +23,24 @@
 2018-07-11 16:24:42,107 ERROR LoggerSingleton:74 - LogService findAll() failed, org.hibernate.QueryException: unexpected char: ';' [select a from com.example.demo.model.LogEntry a where a.process like ;wantedThread]
 2018-07-12 09:52:23,326 ERROR LoggerSingleton:67 - ServiceService findByName(name3) executed successfully.
 2018-07-12 10:04:41,676 ERROR LoggerSingleton:32 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 10:53:28,652 ERROR LoggerSingleton:35 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 10:53:28,657 ERROR LoggerSingleton:35 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 10:53:28,662 ERROR LoggerSingleton:35 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 10:53:28,665 ERROR LoggerSingleton:35 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 10:53:28,668 ERROR LoggerSingleton:35 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 10:53:28,672 ERROR LoggerSingleton:35 - ServiceService saveService() has failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 11:46:16,002 ERROR LoggerSingleton:39 - LogService save(logEntry) Failed, org.hibernate.exception.ConstraintViolationException: could not execute statement
+2018-07-12 11:49:39,005 ERROR LoggerSingleton:39 - LogService save(logEntry) Failed, org.hibernate.PersistentObjectException: detached entity passed to persist: com.example.demo.model.ServiceModel
+2018-07-12 12:02:53,557 ERROR LoggerSingleton:39 - LogService save(logEntry) Failed, org.hibernate.PersistentObjectException: detached entity passed to persist: com.example.demo.model.ServiceModel
+2018-07-12 12:05:28,216 ERROR LoggerSingleton:39 - LogService save(logEntry) Failed, org.hibernate.PersistentObjectException: detached entity passed to persist: com.example.demo.model.ServiceModel
+2018-07-12 12:27:22,438 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 12:28:28,312 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 12:30:24,977 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 12:32:19,043 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 12:34:13,399 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 12:59:57,269 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 13:28:07,618 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 13:33:05,480 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 13:34:07,805 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 13:34:58,084 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.
+2018-07-12 14:12:56,228 ERROR LoggerSingleton:70 - ServiceService findByName(temp) executed successfully.

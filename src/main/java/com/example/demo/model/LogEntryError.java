@@ -12,16 +12,16 @@ public class LogEntryError extends LogEntry{
 		public LogEntryError() {
 			// TODO Auto-generated constructor stub
 		}
-		
-		
 		public LogEntryError(String exception) {
 			super();
 			this.exception = exception;
 		}
-		
-
 		public LogEntryError(String time, String level, String process, String className, String message , String exception) {
 			super(time, level, process, className, message);
+			this.exception = exception;
+		}
+		public LogEntryError(String time, String level, String process, String className, String message , String exception, int serviceId) {
+			super(time, level, process, className, message,serviceId);
 			this.exception = exception;
 		}
 

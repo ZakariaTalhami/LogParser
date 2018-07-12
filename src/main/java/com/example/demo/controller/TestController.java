@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,21 +36,28 @@ public class TestController {
 		if (factory == null) {
 			return null;
 		} else {
-//			entry = new ArrayList<>();
-//			String [] buffer = new String[]{"test","Error","test","test","test","test"}; 
-//			entry.add(factory.getLogEntry(buffer));
-			entry = logService.findAllByThread("ew-1");
+//			LogEntry log = new LogEntry("2018-07-09 11:45:46,529","LEVEL" ,"PROCESS","CLASS","MESSAGE");
+//			if (log.getTimestamp()!=null) {
+//				logger.info(getClass().getSimpleName()+" Log has a timestamp of "+log.getTimestamp().toString());
+//			}
+			entry = new ArrayList<>();
+			entry.add(logService.findById(122667));
+			entry.add(logService.findById(122758));
+			entry = logService.findByRange(entry.get(0).getTimestamp() , entry.get(1).getTimestamp());
+//			logService.save(log);
 			return entry;
 		}
 	}
 	
 	@RequestMapping("/")
 	public List<LogEntry> findAll(){
+		logger.info(getClass().getSimpleName()+" Entered findAll()");
 		return logService.findAll();
 	}
 	
 	@RequestMapping("/thread/{thread}")
 	public List<LogEntry> findAllByThread(@PathVariable String thread){
+		logger.info(getClass().getSimpleName()+" Entered findAllByThread("+thread+")");
 		return logService.findAllByThread(thread);
 	}
 	
@@ -62,12 +70,28 @@ public class TestController {
 	
 	@RequestMapping("/{id}")
 	public LogEntry findById(@PathVariable int id) {
+		logger.info(getClass().getSimpleName()+" Entered findById("+id+").");
  		return logService.findById(id);
 	}
 	
 	@RequestMapping("/error")
 	public List<LogEntryError> findAllErrors(){
+		logger.info(getClass().getSimpleName()+" Entered findAllErrors().");
 		return logService.findAllErrors();
+	}
+	
+	@RequestMapping("/range/{min}/{max}")
+	public List<LogEntry> findByRange(@PathVariable String min, @PathVariable String max){
+		logger.info(getClass().getSimpleName()+" Entered findByRange("+min+" , "+max+")");
+		List<LogEntry> entries = null;
+		LogEntry minEntry,maxEntry;
+		minEntry = new LogEntry();
+		minEntry.setTimestamp(min);
+		
+		maxEntry = new LogEntry();
+		maxEntry.setTimestamp(max);
+		entries = logService.findByRange(minEntry.getTimestamp(), maxEntry.getTimestamp());
+		return entries;
 	}
 }
 

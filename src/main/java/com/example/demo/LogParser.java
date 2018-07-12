@@ -16,6 +16,7 @@ import com.example.demo.singleton.LoggerSingleton;
 public class LogParser {
 
 	private String Log;
+	private int serviceId;
 	private List<LogEntry> EntryList = new ArrayList<>();
 	private int nextIndex=0;
 	private Logger logger = LoggerSingleton.getLoggerOBJ().getLoggerman();
@@ -41,6 +42,15 @@ public class LogParser {
 		EntryList = entryList;
 	}
 	
+	
+	public int getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(int serviceId) {
+		this.serviceId = serviceId;
+	}
+
 	@Deprecated
 	public LogEntry parseOneEntry() {
 		LogEntry entry = null;
@@ -92,14 +102,15 @@ public class LogParser {
 				Matcher matcher = Pattern.compile("((\\d{4})-(\\d{2})-(\\d{2}))").matcher(Log);
 				buffer = Log.split("((\\d{4})-(\\d{2})-(\\d{2}))", 2);				//Split and match by the date format
 				exception = buffer[0].trim();					//Get the exception from the log
-				
+				logger.debug(getClass().getSimpleName()+"   first => "+buffer[0]);
+				logger.debug(getClass().getSimpleName()+"   second => "+buffer[1]);
 				if(matcher.find()) {							//Retrieve the delimiter
 					buffer[1] = matcher.group(1)+buffer[1];		//Re-insert the delimiter back into the  log
 				}
 				setLog(buffer[1]);								//Remove the exception from the log String
 			}
 
-			EntryList.add(entryFactory.getLogEntry(new String[] {timeStamp,lvl,process,object,message,exception}));
+			EntryList.add(entryFactory.getLogEntry(new String[] {timeStamp,lvl,process,object,message,exception},serviceId));
 			
 			//DEBUG
 //			logger.debug(getClass().getSimpleName()+" --------------------------------------");

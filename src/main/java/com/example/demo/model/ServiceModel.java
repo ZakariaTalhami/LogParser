@@ -27,6 +27,11 @@ public class ServiceModel {
 		super();
 		this.name = name;
 	}
+	public ServiceModel(int id , String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
 	public int getId() {
 		return id;

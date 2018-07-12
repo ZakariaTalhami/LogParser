@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.LogParser;
+import com.example.demo.model.ServiceModel;
 import com.example.demo.singleton.LoggerSingleton;
 
 @Service
@@ -22,6 +23,8 @@ public class LogParserServies {
 	
 	@Autowired
 	private LogService logServicer;
+	@Autowired
+	private ServiceService serviceHandler;
 
 	/*
 	 * Parse(String)
@@ -31,13 +34,21 @@ public class LogParserServies {
 	public void Parse(String LogName) {
 		//Make the log global?
 		String log;
-		log = openLog(LogName);							//Get the log entries as string
-		logger.info(getClass().getSimpleName()+" Parse Read "+log.length()+" lines from the log file");
-		LogParser parser = new LogParser();
-		parser.setLog(log);
-		parser.ParseAll();
-//		parser.printEntryList();	
-		logServicer.saveAllEntries(parser.getEntryList());
+		ServiceModel service;
+		if(serviceHandler.exist(LogName)) {
+			service = serviceHandler.findByName(LogName);
+			log = openLog(LogName);							//Get the log entries as string
+			logger.info(getClass().getSimpleName()+" Parse Read "+log.length()+" lines from the log file");
+			LogParser parser = new LogParser();
+			parser.setLog(log);
+			parser.setServiceId(service.getId());
+			parser.ParseAll();
+//			parser.printEntryList();	
+			logServicer.saveAllEntries(parser.getEntryList());
+		}else {
+			
+		}
+		
 	}
 	
 	

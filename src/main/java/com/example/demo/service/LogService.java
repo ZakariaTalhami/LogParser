@@ -1,10 +1,14 @@
 package com.example.demo.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,6 +131,20 @@ public class LogService implements LogEntryDAO {
 		for (int i = 0; i < entries.size(); i++) {
 			save(entries.get(i));
 		}
+	}
+	
+	public List<LogEntry> findByRange(Date min , Date max) {
+		List<LogEntry> entries = null;
+		try {
+			Session sess = entityManagerFactor.unwrap(Session.class);
+			entries = sess.createCriteria(LogEntry.class).add(Restrictions.le("timestamp", max)).add(Restrictions.ge("timestamp", min)).list();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error(getClass().getSimpleName() + "  findByRange() Failed. " + e.getMessage());
+		}
+		
+		return entries;
 	}
 
 }
