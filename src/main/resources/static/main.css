@@ -1,0 +1,33 @@
+.title{
+    background-color: #868686;
+    border: black 2px solid;
+    text-align: center;
+}
+
+p{
+    text-indent:  5%;
+}
+p::first-letter{
+    text-transform: uppercase;
+}
+.form_sec{
+    border-bottom: #868686;
+    background-color: #444444;
+    width: 20%;
+}
+p.hovered::first-letter{
+    text-transform: uppercase;
+    font-size: 1.5em;
+}
+
+input.focused{
+    background-color: #aafff4
+}
+li:nth-child(even){
+    color: red
+}li:nth-child(odd){
+    color: green
+}
+.fade_50{
+    opacity: .5;
+}
