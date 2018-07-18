@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.LogEntry;
@@ -114,5 +115,16 @@ public class TestController {
 	@RequestMapping("/class")
 	public List<String> getAllClassNames() {
 		return logService.getClassList();
+	}
+	
+	
+	@RequestMapping(value="/{logId}/tag/{tagId}")
+	public void addTag(@PathVariable int logId , @PathVariable int tagId) {
+		logService.addTag(logId, tagId);
+	}
+	
+	@RequestMapping(value="/{logId}/tag", method=RequestMethod.PUT)
+	public void removeTag(@PathVariable int logId ) {
+		logService.removeTag(logId);
 	}
 }

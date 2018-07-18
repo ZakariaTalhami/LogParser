@@ -53,3 +53,10 @@
 2018-07-17 11:43:40,859 ERROR LoggerSingleton:223 - LogService getPage(1) Failed, 1
 2018-07-17 11:57:41,810 ERROR LoggerSingleton:223 - LogService getPage(1) Failed, 1
 2018-07-17 12:19:46,460 ERROR LoggerSingleton:227 - LogService getPage(1) Failed, Parameter value [2018-07-09 07:06:25,555] did not match expected type [java.util.Date (n/a)]
+2018-07-18 14:45:46,773 ERROR LoggerSingleton:270 - LogService getPage(1) Failed, 1
+2018-07-18 14:48:03,994 ERROR LoggerSingleton:270 - LogService getPage(1) Failed, 1
+2018-07-18 14:48:05,657 ERROR LoggerSingleton:270 - LogService getPage(1) Failed, 1
+2018-07-18 14:52:11,353 ERROR LoggerSingleton:270 - LogService getPage(1) Failed, 1
+2018-07-18 14:52:12,205 ERROR LoggerSingleton:270 - LogService getPage(1) Failed, 1
+2018-07-18 14:52:12,782 ERROR LoggerSingleton:270 - LogService getPage(1) Failed, 1
+2018-07-18 14:53:38,080 ERROR LoggerSingleton:270 - LogService getPage(1) Failed, 1

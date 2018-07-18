@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.dao.LogEntryDAO;
 import com.example.demo.model.LogEntry;
 import com.example.demo.model.LogEntryError;
+import com.example.demo.model.Tag;
 import com.example.demo.singleton.LoggerSingleton;
 
 @Service
@@ -31,6 +32,8 @@ public class LogService implements LogEntryDAO {
 	private EntityManager entityManagerFactor;
 	@Autowired
 	private LogParserServies parser;
+	@Autowired
+	private TagService tagService;
 	final static Logger logger = LoggerSingleton.getLoggerOBJ().getLoggerman();
 
 	/*
@@ -104,7 +107,7 @@ public class LogService implements LogEntryDAO {
 		try {
 			logEntry = entityManagerFactor.find(LogEntry.class, id);
 			logger.info(getClass().getSimpleName() + "  find(" + id + ") LogEntry Successfully ");
-			logger.info(getClass().getSimpleName() + "  find(" + id + ") LogEntry Successfully "+logEntry.getTimestamp());
+//			logger.info(getClass().getSimpleName() + "  find(" + id + ") LogEntry Successfully "+logEntry.getTimestamp());
 		} catch (Exception e) {
 			logger.error(getClass().getSimpleName() + "  find(" + id + ") Failed. " + e.getMessage());
 		}
@@ -239,14 +242,22 @@ public class LogService implements LogEntryDAO {
 				if(file > 0) {
 					p.add(builder.and(builder.equal(myRoot.get("service").get("id"), file)));
 				}
-//				if(minTime!= null && !minTime.isEmpty()) {
-//					logger.info(getClass().getSimpleName()+" minTime = "+minTime);
-//					LogEntry min = new LogEntry(minTime,"","","","");
-//					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
-//					logger.info(getClass().getSimpleName()+" minTime = "+formater.format(min.getTimestamp())+","+min.getmSec());
-//					
-//					p.add(builder.and(builder.equal(myRoot.<Date>get("timestamp"), min.getTimestamp())));
-//				}
+				if(minTime!= null && !minTime.isEmpty()) {
+					logger.info(getClass().getSimpleName()+" minTime = "+minTime);
+					LogEntry min = new LogEntry(minTime,"","","","");
+					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+					logger.info(getClass().getSimpleName()+" minTime = "+formater.format(min.getTimestamp())+","+min.getmSec());
+					
+					p.add(builder.and(builder.greaterThanOrEqualTo(myRoot.<Date>get("timestamp"), min.getTimestamp())));
+				}
+				if(maxTime!= null && !maxTime.isEmpty()) {
+					logger.info(getClass().getSimpleName()+" maxTime = "+maxTime);
+					LogEntry max = new LogEntry(maxTime,"","","","");
+					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+					logger.info(getClass().getSimpleName()+" maxTime = "+formater.format(max.getTimestamp())+","+max.getmSec());
+					
+					p.add(builder.and(builder.lessThanOrEqualTo(myRoot.<Date>get("timestamp"), max.getTimestamp())));
+				}
 				Predicate[] pr = new Predicate[p.size()];
 				
 				//finish the query and return the result
@@ -261,25 +272,40 @@ public class LogService implements LogEntryDAO {
 		}
 		return entries;
 	}
+
+	@Override
+	@Transactional
+	public void addTag(int logId, int tagId) {
+		Tag tag= null;
+		LogEntry entry = null;
+		try {
+			tag = tagService.findTagById(tagId);
+			entry = this.findById(logId);
+			entry.setTag(tag);
+			this.save(entry);
+			logger.info(getClass().getSimpleName()+"addTag("+logId+" , "+tagId+") executed successfully");
+		} catch (Exception e) {
+			logger.info(getClass().getSimpleName()+"addTag("+logId+" , "+tagId+") Failed, "+e.getMessage());
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public void removeTag(int logId) {
+		LogEntry entry = null;
+		try {
+			entry = this.findById(logId);
+			entry.setTag(null);
+			this.save(entry);
+			logger.info(getClass().getSimpleName()+"removeTag("+logId+") executed successfully");
+		} catch (Exception e) {
+			logger.info(getClass().getSimpleName()+"removeTag("+logId+") failed,  "+e.getMessage());
+		}
+		
+	}
 	
 	
-//	public List<MyObject> listAllForIds(List<Long> ids) {
-//
-//	    CriteriaBuilder builder = getSessionFactory().getCurrentSession().getCriteriaBuilder();
-//	    CriteriaQuery<MyObject> criteria = builder.createQuery(MyObject.class);
-//	    Root<MyObject> myObjectRoot = criteria.from(MyObject.class);
-//	    Join<MyObject, JoinObject> joinObject = myObjectRoot.join("joinObject");
-//
-//	    Predicate likeRestriction = builder.and(
-//	            builder.notLike( myObjectRoot.get("name"), "%string1"),
-//	            builder.notLike( myObjectRoot.get("name"), "%string2")
-//	    );
-//
-//	    criteria.select(myObjectRoot).where(joinObject.get("id").in(ids), likeRestriction);
-//
-//	    TypedQuery<MyObject> query = getSessionFactory().getCurrentSession().createQuery(criteria);
-//
-//	    return query.getResultList();
-//	}
+	
 
 }

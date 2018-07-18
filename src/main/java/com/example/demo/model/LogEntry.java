@@ -38,6 +38,9 @@ public class LogEntry {
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	private ServiceModel service;
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
+	private Tag tag;
 
 	@Column(name = "time")
 	private Date timestamp;
@@ -146,6 +149,14 @@ public class LogEntry {
 	}
 	public void setmSec(String mSec) {
 		this.mSec = Integer.parseInt(mSec.split(",")[1]);
+	}
+
+	public Tag getTag() {
+		return tag;
+	}
+
+	public void setTag(Tag tag) {
+		this.tag = tag;
 	}
 
 	@Override

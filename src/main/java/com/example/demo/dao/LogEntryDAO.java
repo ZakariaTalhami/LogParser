@@ -12,4 +12,7 @@ public interface LogEntryDAO {
 	public LogEntry findById(int id);
 	public LogEntryError findErrorById(int id);
 	
+	public void addTag(int logId , int tagId);
+	public void removeTag(int logId );
+	
 }

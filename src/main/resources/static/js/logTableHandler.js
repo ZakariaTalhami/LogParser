@@ -1,28 +1,35 @@
+
+/* 
+    Reset click event listeners for the newly generated
+    table rows.
+*/
 function TdClicker() {
     $("td[title]").click(function (e) {
         e.preventDefault();
         var dialog = $("#dialog");
-        dialog.text($(this).attr("title"));
+        dialog.text($(this).attr("title"));         //Set the text of the dialog to either message or exception
         dialog.dialog("open");
     });
     $("button.tag").click(function (e) {
         e.preventDefault();
-        console.log($(this).attr("id"));
-        var index = $(this).attr("id");
-        entries[index-entries[0].id].tag = "red";
+        selectedLog = $(this).attr("id");           //Saves the Id of the selected LogEntry, for tagging
+        // console.log(selectedLog);
     });
 }
 
+/* 
+    Convert an LogEntry object into an html table row
+*/
 function createRow(element) {
+    var tag = "None"
+    if (element.tag != null)
+        tag = element.tag.tag;
     var newRow = "<tr>";
-    // star clm
-    newRow += "<td class='' ><button class='btn btn-primary tag' id="+element.id+">click</button></td>"
+    // Tag clm
+    // Clicking The button opens MODAL of id = taggingModal
+    newRow += "<td class='' ><button class='btn btn-primary tag' id='" + element.id + "' data-toggle='modal' data-target='#taggingModal'>" + tag + "</button></td>"
     // timestamp clm
-    /*
-     * Time needs to be parsed better, to give a better look 
-     */
-    newRow += "<td>" +element.timestamp+ "</td>"
-    // newRow += "<td>" + ParseTime(element.timestamp, element.mSec) + "</td>"
+    newRow += "<td>" + ParseTime(element.timestamp, element.mSec) + "</td>"
     // level
     newRow += "<td>" + element.level + "</td>"
     // thread 
@@ -31,18 +38,18 @@ function createRow(element) {
     newRow += "<td>" + element.className + "</td>"
     // message 
     var str = element.message
-    str = str.split('"').join('\'');
-    if (element.message.length > 50) {
+    str = str.split('"').join('\'');                    //Remove the ' " ' from messages
+    if (element.message.length > 50) {                  //cut down the message to better size
         newRow += "<td title=\"" + str + "\">" + element.message.substring(0, 50) + "..." + "</td>";
     } else {
         newRow += "<td title=\"" + str + "\">" + element.message + "</td>";
     }
     // newRow += "<td title='"+element.message+"'>" + element.message.substring(0,50) + "</td>"
     // exception
-    if (element.exception != null) {
+    if (element.exception != null) {                    // filter non-error logs
         str = element.exception;
-        str = str.split('"').join('\'');
-        if (element.exception.length > 50) {
+        str = str.split('"').join('\'');                //Remove the ' " ' from messages
+        if (element.exception.length > 50) {            //Cut down the message to better size
             newRow += "<td title=\"" + str + "\">" + element.exception.substring(0, 50) + "..." + "</td>";
         } else {
             newRow += "<td title=\"" + str + "\">" + element.exception + "</td>";
@@ -52,6 +59,9 @@ function createRow(element) {
         newRow += "<td> -- </td>"
     return newRow + "</tr>";
 }
+/* 
+    Structures a list of log entries into HTML and returns it
+*/
 function StructureLogs(response) {
     var newHTML = "";
     response.forEach(element => {
@@ -60,6 +70,10 @@ function StructureLogs(response) {
     });
     return newHTML;
 }
+
+/* 
+    Loads the next Page of logs, by requesting the server
+*/
 function getPage(page) {
     var data;
     $.ajax({
@@ -76,17 +90,20 @@ function getPage(page) {
         },
         dataType: "json",
         success: function (response) {
-            entries = entries.concat(response);
-            var newHTML = StructureLogs(response);
+            entries = entries.concat(response);         //  Add to the current log list
+            var newHTML = StructureLogs(response);      //  Convert list of objects to html rows
             // console.log("NewHTML : " + newHTML);
-            $("#logTableBody").append(newHTML);
+            $("#logTableBody").append(newHTML);         //  Add New page to the Table
 
             // Reset the listeners
             TdClicker();
         }
     });
 }
-// 2018-07-09T07:08:37.000+0000
+
+/* 
+    Converts the time format received from the server
+*/
 function ParseTime(TimeString, mSec) {
     // var str = "2018-07-09T07:08:37.000+0000";
     // mSec = 255;
@@ -100,12 +117,18 @@ function ParseTime(TimeString, mSec) {
     return newTime;
 }
 
+/* 
+    Applies a filter to the Log Entries that are displayed in the table
+        Filters by : 1) search word in the message or exception
+                     2) Tag
+*/
 function FilterByWord(element) {
     //Search in message/exception/class/thread
     var hasWord = false;
-    var hasTag = true;
+    var hasTag = false;
     var message = element.message.toLowerCase();
     var exception = element.exception;
+
     if (gFilterWord != null && gFilterWord != "") {
         if (message.indexOf(gFilterWord) != -1) {     //match to search word
             hasWord = true;
@@ -119,7 +142,18 @@ function FilterByWord(element) {
     } else {      //no Search word
         hasWord = true;
     }
-    return hasWord;
+
+    if (gTag > 0) {                     //No tag filter set
+        if (element.tag != null) {          //filter unTagged logs
+            if (element.tag.id == gTag) {    //Filter disimilar Tagged logs
+                hasTag = true;
+            }
+        }
+    } else {
+        hasTag = true;
+    }
+
+    return (hasWord && hasTag);
 }
 
 /*
@@ -133,22 +167,22 @@ var gmaxTime = "";
 var gClassName = "";
 var gThread = "";
 var gFilterWord = "";
+var gTag = -1;
 var entries = [];
+var selectedLog = -1;
+
+/* 
+    Get the First page
+*/
 getPage(1);
 
-$("#getPageBtn").click(function (e) {
-    e.preventDefault();
-    var page = $("#pageSelector").val();
-    console.log("Page : " + page);
-    // Check if there is a number
-    if (page == 0) {
-        alert("Need to enter a number!");
-    } else {
-        getPage(page);
-    }
-});
+
+/* 
+    Listens to the event of reach the bottom of the page, used request the next page
+    and providing a continuous scrolling table.
+*/
 $(window).scroll(function () {
-    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+    if ($(window).scrollTop() + $(window).height() > $(document).height()-1) {
         page++;
         getPage(page);
     }
@@ -209,8 +243,7 @@ $("#maxTimestamp").change(function (e) {
     console.log($(this).val());
     // Set the new level value
     gmaxTime = $(this).val();
-    gminTime = $(this).val();
-    gminTime = gminTime.replace("T", " ").replace(".", ",");
+    gmaxTime = gmaxTime.replace("T", " ").replace(".", ",");
     //Reset the table 
     $("#logTableBody").empty();
     //load the first page again
@@ -253,17 +286,71 @@ $("#wordSearch").change(function (e) {
     $("#logTableBody").append(newHTML);
     TdClicker();
 });
-
+$("#selectTag").change(function (e) {
+    e.preventDefault();
+    console.log($(this).val());
+    // Set the new level value
+    gTag = $(this).val();
+    //Reset the table 
+    $("#logTableBody").empty();
+    var newHTML = StructureLogs(entries);
+    $("#logTableBody").append(newHTML);
+    TdClicker();
+});
 $("#dialog").dialog({ autoOpen: false, title: "Message" });
 $("#containerForm").submit(function (e) {
     e.preventDefault();
 });
-$("#formToggler").click(function (e) { 
+$("#formToggler").click(function (e) {
     e.preventDefault();
     $("#dropdownBtn").toggle();
     $("#dropdown").toggleClass("dropdown-menu");
 });
 
+$("#createTagForm").submit(function (e) {
+    e.preventDefault();
+    var tagName = $("#createTagInput").val();
+    $.ajax({
+        type: "POST",
+        url: "http:/tag",
+        contentType: "application/json",
+        data: JSON.stringify({ tag: tagName }),
+        dataType: "json",
+        complete: function (response) {
+            $("#ModalClose").trigger("click");
+            $("#selectTag").empty();
+            $("#selectTag").append("<option disabled selected value> -- select an option -- </option><option value=\"-1\">None</option>");
+            FillTagsSelect();
+        }
+    });
+});
+
+$(".selectLogTag").change(function (e) {
+    e.preventDefault();
+    // console.log("In the select with btn : "+selectedLog);
+    var newtag = $(this).val();
+    // console.log($(this).find(":selected").text());
+    var text = $(this).find(":selected").text();
+    $.ajax({
+        type: "get",
+        url: "http:/log/" + selectedLog + "/tag/" + newtag,
+        data: "data",
+        dataType: "JSON",
+        complete: function (response) {
+            console.log(text);
+            console.log($("#" + selectedLog));
+            $("#" + selectedLog).html(text);
+            var obj = entries.find(o => o.id == selectedLog);
+            // console.log(obj);
+            // obj.tag.id = newtag;
+            // obj.tag.tag = text;
+            obj.tag = {
+                id: newtag,
+                tag: text
+            };
+        }
+    });
+});
 
 
 
@@ -306,3 +393,20 @@ $.ajax({
         });
     }
 });
+FillTagsSelect();
+function FillTagsSelect() {
+    $.ajax({
+        type: "get",
+        url: "http:/tag",
+        dataType: "json",
+        success: function (response) {
+            var select = $(".selectTag");
+            response.forEach(element => {
+                $.each(select, function (indexInArray, valueOfElement) {
+                    // console.log(valueOfElement); 
+                    $(valueOfElement).append("<option value='" + element.id + "'>" + element.tag + "</option>");
+                });
+            });
+        }
+    });
+}
