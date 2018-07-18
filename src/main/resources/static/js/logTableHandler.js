@@ -193,7 +193,9 @@ $(window).scroll(function () {
         This Section needs some major changing, the code has lots of similar code that 
         keeps repeating. 
 */
-// Maybe i could do the filtering from the front end, with the entries variable.
+/* 
+        Adding listenters to the Various filters
+*/
 $("#selectLevel").change(function (e) {
     e.preventDefault();
     console.log($(this).val());
@@ -297,54 +299,70 @@ $("#selectTag").change(function (e) {
     $("#logTableBody").append(newHTML);
     TdClicker();
 });
+
+/* 
+    Set up the jQuery dialog
+*/
 $("#dialog").dialog({ autoOpen: false, title: "Message" });
+
+/* 
+    Stop submissions from the form containing all the filter selectors
+*/
 $("#containerForm").submit(function (e) {
     e.preventDefault();
 });
+
+/* 
+    Setting listener for toggling the Search bar
+*/
 $("#formToggler").click(function (e) {
     e.preventDefault();
-    $("#dropdownBtn").toggle();
-    $("#dropdown").toggleClass("dropdown-menu");
+    $("#dropdownBtn").toggle();                     // show/hide the dropdown button
+    $("#dropdown").toggleClass("dropdown-menu");    // show/hide the Search bar
 });
 
+
+/* 
+    Handles the creation of new tags, deals with the submission of the
+    form in the Modal for creating tags
+*/
 $("#createTagForm").submit(function (e) {
     e.preventDefault();
-    var tagName = $("#createTagInput").val();
-    $.ajax({
+    var tagName = $("#createTagInput").val();       //Extract tag name from input
+    $.ajax({                                        //Send POST request server
         type: "POST",
         url: "http:/tag",
         contentType: "application/json",
         data: JSON.stringify({ tag: tagName }),
         dataType: "json",
         complete: function (response) {
-            $("#ModalClose").trigger("click");
-            $("#selectTag").empty();
+            $("#ModalClose").trigger("click");      //Close the Window
+            $("#selectTag").empty();                //Refresh the selects for Tags
             $("#selectTag").append("<option disabled selected value> -- select an option -- </option><option value=\"-1\">None</option>");
             FillTagsSelect();
         }
     });
 });
 
+
+/* 
+    Handles Tagging of log entries
+*/
 $(".selectLogTag").change(function (e) {
     e.preventDefault();
-    // console.log("In the select with btn : "+selectedLog);
-    var newtag = $(this).val();
-    // console.log($(this).find(":selected").text());
-    var text = $(this).find(":selected").text();
+    var newtag = $(this).val();                     //get tag id
+    var text = $(this).find(":selected").text();    //get tag text
     $.ajax({
-        type: "get",
+        type: "get",                                //send update request to the server
         url: "http:/log/" + selectedLog + "/tag/" + newtag,
         data: "data",
         dataType: "JSON",
         complete: function (response) {
-            console.log(text);
-            console.log($("#" + selectedLog));
-            $("#" + selectedLog).html(text);
-            var obj = entries.find(o => o.id == selectedLog);
-            // console.log(obj);
-            // obj.tag.id = newtag;
-            // obj.tag.tag = text;
-            obj.tag = {
+            // console.log(text);
+            // console.log($("#" + selectedLog));
+            $("#" + selectedLog).html(text);        //Set the tag button to the text of the tag
+            var obj = entries.find(o => o.id == selectedLog); //add the tag to the cached entries 
+            obj.tag = {                             //Create the tag object
                 id: newtag,
                 tag: text
             };
