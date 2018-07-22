@@ -27,7 +27,7 @@ function createRow(element) {
     var newRow = "<tr>";
     // Tag clm
     // Clicking The button opens MODAL of id = taggingModal
-    newRow += "<td class='' ><button class='btn btn-primary tag' id='" + element.id + "' data-toggle='modal' data-target='#taggingModal'>" + tag + "</button></td>"
+    newRow += "<td class='' ><button class='btn btn-primary tag btn-block' id='" + element.id + "' data-toggle='modal' data-target='#taggingModal'>" + tag + "</button></td>"
     // timestamp clm
     newRow += "<td>" + ParseTime(element.timestamp, element.mSec) + "</td>"
     // level
@@ -78,7 +78,7 @@ function getPage(page) {
     var data;
     $.ajax({
         type: "get",
-        url: "http://localhost:8080/log/page/" + page,
+        url: "http:/log/page/" + page,
         data: {
             page: page,
             level: glevel,

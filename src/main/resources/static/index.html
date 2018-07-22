@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>LogParser</title>
+    <title>parstatus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="./css/main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="./jquery-ui/jquery-ui.min.css" />
@@ -18,7 +18,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">WebSiteName</a>
+                <a class="navbar-brand" href="#">Parstatus</a>
             </div>
             <button class="btn btn-danger navbar-btn navbar-right" id="formToggler"> Toggle</button>
             <ul class="nav navbar-nav navbar-right">
@@ -35,7 +35,7 @@
                                         <span class="input-group-addon">
                                             Level
                                         </span>
-                                        <select name="level_select" id="selectLevel" class="form-control">
+                                        <select name="level_select" id="selectLevel" class="form-control input-block-level">
                                             <option disabled selected value> -- select an option -- </option>
                                             <option value="">All</option>
                                             <option value="INFO">Info</option>
@@ -49,12 +49,12 @@
                                         <span class="input-group-addon">
                                             File
                                         </span>
-                                        <select name="file_select" id="selectFile" class="form-control">
+                                        <select name="file_select" id="selectFile" class="form-control input-block-level">
                                             <option disabled selected value> -- select an option -- </option>
                                             <option value="">All</option>
                                         </select>
                                     </div>
-                                    <div class="input-group">
+                                    <div class="input-group input-block-level">
                                         <span class="input-group-addon">
                                             Thread
                                         </span>
@@ -178,7 +178,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
+                    <h4 class="modal-title">Set Tag</h4>
                 </div>
                 <div class="modal-body">
                     <div class="input-group">
