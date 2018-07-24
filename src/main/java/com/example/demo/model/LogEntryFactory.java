@@ -20,10 +20,16 @@ public class LogEntryFactory {
 				logger.debug(getClass().getSimpleName()+" Creating a LogEntryError");
 				logEntry = new LogEntryError(buffer[0],buffer[1],buffer[2],buffer[3],buffer[4], buffer[5],serviceId);
 				break;
-
-			default:
+			case "INFO":
 				logger.debug(getClass().getSimpleName()+" Creating a LogEntry");
 				logEntry = new LogEntry(buffer[0],buffer[1],buffer[2],buffer[3],buffer[4],serviceId);
+				break;
+			case "WARN":
+				logger.debug(getClass().getSimpleName()+" Creating a LogEntry");
+				logEntry = new LogEntry(buffer[0],buffer[1],buffer[2],buffer[3],buffer[4],serviceId);
+				break;
+			default:
+				logEntry=null;
 				break;
 			}
 		}

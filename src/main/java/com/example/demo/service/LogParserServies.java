@@ -60,7 +60,7 @@ public class LogParserServies {
 	 * 		Returns the log file as a string
 	 * 								(should change this if this is still considered good practice)
 	 */
-	private String openLog(String LogName) {
+	public String openLog(String LogName) {
 		String log="";
 		File file = new File("log\\"+LogName+".log");
 

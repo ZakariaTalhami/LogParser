@@ -40,6 +40,9 @@ public class LogService implements LogEntryDAO {
 	 * @see com.example.demo.dao.LogEntryDAO#save(com.example.demo.model.LogEntry)
 	 * Saves the LogEntries, should in theory deal with the polymorphism
 	 */
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#save(com.example.demo.model.LogEntry)
+	 */
 	@Override
 	@Transactional
 	public void save(LogEntry logEntry) {
@@ -53,6 +56,10 @@ public class LogService implements LogEntryDAO {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#saveError(com.example.demo.model.LogEntryError)
+	 */
+	@Override
 	@Transactional
 	@Deprecated
 	public void saveError(LogEntryError entryError) {
@@ -65,6 +72,9 @@ public class LogService implements LogEntryDAO {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#findAll()
+	 */
 	@Override
 	public List<LogEntry> findAll() {
 		List<LogEntry> entries = null;
@@ -77,6 +87,10 @@ public class LogService implements LogEntryDAO {
 		return entries;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#findAllByThread(java.lang.String)
+	 */
+	@Override
 	public List<LogEntry> findAllByThread(String thread) {
 		List<LogEntry> entries = null;
 		try {
@@ -89,6 +103,10 @@ public class LogService implements LogEntryDAO {
 		return entries;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#findAllErrors()
+	 */
+	@Override
 	public List<LogEntryError> findAllErrors() {
 		List<LogEntryError> entryErrors = null;
 		entryErrors = entityManagerFactor.createQuery("select a from LogEntryError a").getResultList();
@@ -101,6 +119,9 @@ public class LogService implements LogEntryDAO {
 		return entryErrors;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#findById(int)
+	 */
 	@Override
 	public LogEntry findById(int id) {
 		LogEntry logEntry = null;
@@ -115,6 +136,9 @@ public class LogService implements LogEntryDAO {
 		return logEntry;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#findErrorById(int)
+	 */
 	@Override
 	@Deprecated
 	public LogEntryError findErrorById(int id) {
@@ -128,10 +152,18 @@ public class LogService implements LogEntryDAO {
 		return entryError;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#parseLog(java.lang.String)
+	 */
+	@Override
 	public void parseLog(String LogName) {
 		parser.Parse(LogName);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#saveAllEntries(java.util.List)
+	 */
+	@Override
 	@Transactional
 	public void saveAllEntries(List<LogEntry> entries) {
 
@@ -140,6 +172,10 @@ public class LogService implements LogEntryDAO {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#findByRange(java.util.Date, java.util.Date)
+	 */
+	@Override
 	public List<LogEntry> findByRange(Date min, Date max) {
 		List<LogEntry> entries = null;
 		try {
@@ -154,6 +190,10 @@ public class LogService implements LogEntryDAO {
 
 		return entries;
 	}
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#getThreadList()
+	 */
+	@Override
 	public List<String> getThreadList(){
 		List<String> list=null;
 		try {
@@ -167,6 +207,10 @@ public class LogService implements LogEntryDAO {
 		return list;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#getClassList()
+	 */
+	@Override
 	public List<String> getClassList(){
 		List<String> list=null;
 		try {
@@ -180,38 +224,11 @@ public class LogService implements LogEntryDAO {
 	}
 
 
-//	public List<LogEntry> getPage(int page, String level) {
-//		List<LogEntry> entries = null;
-//		int limit = 50;
-//		int offset = (page-1)*limit;
-//		String levelFilter="";
-//		String whereCondition="";
-//		if (page > 0) {
-//			try {
-//				// Filter by LEVEL
-//				if (level != null && !level.isEmpty()) {
-//					if (whereCondition.isEmpty()) {
-//						whereCondition = " where ";
-//					}else {
-//						levelFilter += " and ";
-//					}
-//					levelFilter += "a.level like '"+level+"' " ;
-//				}
-//				
-//				// Creating the Query
-//				entries = entityManagerFactor.createQuery("select a from LogEntries a "+whereCondition+levelFilter).setFirstResult(offset)
-//						.setMaxResults(limit).getResultList();
-//				logger.info(getClass().getSimpleName() + " getPage(" + page + ") executed successfully, returned "
-//						+ entries.size()+" entries");
-//			} catch (Exception e) {
-//				logger.error(getClass().getSimpleName() + " getPage(" + page + ") Failed, " + e.getMessage());
-//			}
-//		}
-//		return entries;
-//	}
-//	
 	
-	
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#getPage(int, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
 	public List<LogEntry> getPage(int page, String level,int file,String maxTime ,String minTime ,String thread, String className ) {
 		List<LogEntry> entries = null;
 		int limit = 50;
@@ -273,6 +290,9 @@ public class LogService implements LogEntryDAO {
 		return entries;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#addTag(int, int)
+	 */
 	@Override
 	@Transactional
 	public void addTag(int logId, int tagId) {
@@ -290,6 +310,9 @@ public class LogService implements LogEntryDAO {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.example.demo.service.ss#removeTag(int)
+	 */
 	@Override
 	@Transactional
 	public void removeTag(int logId) {

@@ -1,4 +1,4 @@
-
+var isinit = false;
 /* 
     Reset click event listeners for the newly generated
     table rows.
@@ -15,6 +15,15 @@ function TdClicker() {
         selectedLog = $(this).attr("id");           //Saves the Id of the selected LogEntry, for tagging
         // console.log(selectedLog);
     });
+    if (!isinit) {
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                paging:false
+            });
+        });
+        isinit = true;
+    }
+
 }
 
 /* 
@@ -182,7 +191,7 @@ getPage(1);
     and providing a continuous scrolling table.
 */
 $(window).scroll(function () {
-    if ($(window).scrollTop() + $(window).height() > $(document).height()-1) {
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
         page++;
         getPage(page);
     }
@@ -428,3 +437,13 @@ function FillTagsSelect() {
         }
     });
 }
+
+
+
+
+/*
+
+    Added
+*/
+
+

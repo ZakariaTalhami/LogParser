@@ -27,7 +27,6 @@ public class ServiceService implements ServiceDAO {
 	@Override
 	@Transactional
 	public void saveService(ServiceModel service) {
-		// TODO Auto-generated method stub
 		try {
 			entityManager.persist(service);
 			logger.info(getClass().getSimpleName() + " saveService() executed successfully");
@@ -70,6 +69,9 @@ public class ServiceService implements ServiceDAO {
 			logger.error(getClass().getSimpleName() + " findByName(" + name + ") executed successfully.");
 		} catch (Exception e) {
 			logger.error(getClass().getSimpleName() + " findByName(" + name + ") has failed, " + e.getMessage());
+		}
+		if (model.size() == 0) {
+			return null;
 		}
 		return model.get(0);
 	}
