@@ -93,6 +93,8 @@ public class LogParser {
 	 * 	Splits and parses the log string provided in the class log attribute and returns a list of parsed
 	 *  log Entries as a list object of class {@link LogEntry}, moreover the result is also store in the 
 	 *  class
+	 * 	{@link LogEntryFactory} is use to create the correct LogEntry instance
+	 * 
 	 * 
 	 * @return List of the log entries resulted from the parsing of the classes log attribute 
 	 */
@@ -125,7 +127,7 @@ public class LogParser {
 				}
 				setLog(buffer[1]);								//Remove the exception from the log String
 			}
-
+			//log the LogEntryFactory to create the correct instance of LogEntry 
 			EntryList.add(entryFactory.getLogEntry(new String[] {timeStamp,lvl,process,object,message,exception},serviceId));
 			
 		}
