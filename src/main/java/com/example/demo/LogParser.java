@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -9,10 +8,18 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import com.example.demo.model.LogEntry;
-import com.example.demo.model.LogEntryError;
 import com.example.demo.model.LogEntryFactory;
 import com.example.demo.singleton.LoggerSingleton;
 
+
+/**
+ * 	Parser Class, used to hold the Log string and split it, to generate the list of {@link LogEntry},
+ * which are also stored in the class.<br>
+ * The {@link LogEntry} are created using {@link LogEntryFactory}
+ * 
+ * @author Zakaria Talhami
+ *
+ */
 public class LogParser {
 
 	private String Log;
@@ -46,11 +53,20 @@ public class LogParser {
 	public int getServiceId() {
 		return serviceId;
 	}
-
+	
 	public void setServiceId(int serviceId) {
 		this.serviceId = serviceId;
+
 	}
 
+
+	
+	/**
+	 * Parses a log string of one line and returns the LogEntry<br>
+	 * <b>Note:</b>Mehtod doesnt work with Error Entries only entries with one line
+	 * 
+	 * @return Parsed LogEntry
+	 */
 	@Deprecated
 	public LogEntry parseOneEntry() {
 		LogEntry entry = null;
@@ -68,24 +84,24 @@ public class LogParser {
 		System.out.println("process => "+process);
 		System.out.println("object => "+object);
 		System.out.println("message => "+message);
-		
 		return entry;
 	}
 	
 	
-	/*
-	 * List<LogEntry> ParseAll():
-	 *  		Splits and parses the entire log string stored in the 
-	 *  		class, creates the LogEntry objects, then returns the 
-	 *  		resulted List of objects
-	 *  		also stores the result in the class
+	
+	/**
+	 * 	Splits and parses the log string provided in the class log attribute and returns a list of parsed
+	 *  log Entries as a list object of class {@link LogEntry}, moreover the result is also store in the 
+	 *  class
+	 * 
+	 * @return List of the log entries resulted from the parsing of the classes log attribute 
 	 */
 	public List<LogEntry> ParseAll(){
 		List<LogEntry> entries = new ArrayList<>();
 		String [] buffer;
 		String timeStamp,lvl,process,object,message;
 		String exception = "";
-		
+
 		//Loop until all the log String has been parsed
 		while (!Log.isEmpty()) {
 			buffer = Log.split("\\|" , 7);						//split by "|"
@@ -112,34 +128,9 @@ public class LogParser {
 
 			EntryList.add(entryFactory.getLogEntry(new String[] {timeStamp,lvl,process,object,message,exception},serviceId));
 			
-			//DEBUG
-//			logger.debug(getClass().getSimpleName()+" --------------------------------------");
-//			logger.debug(getClass().getSimpleName()+" ----------- Parsed Entry  ------------");
-//			logger.debug(getClass().getSimpleName()+" --------------------------------------");
-//			logger.debug(getClass().getSimpleName()+"   Time => "+timeStamp);
-//			logger.debug(getClass().getSimpleName()+"   lvl => "+lvl);
-//			logger.debug(getClass().getSimpleName()+"   process => "+process);
-//			logger.debug(getClass().getSimpleName()+"   object => "+object);
-//			logger.debug(getClass().getSimpleName()+"   message => "+message);
-//			if(!exception.isEmpty()) {
-//				logger.debug(getClass().getSimpleName()+" Excetion "+exception);
-//			}
-//			logger.debug(getClass().getSimpleName()+"   Remaining => \n"+Log);
-//			logger.debug(getClass().getSimpleName()+" --------------------------------------");
 		}
 		
 		return entries;
-	}
-	
-	public void printEntryList() {
-		
-		for (int i = 0; i < EntryList.size(); i++) {
-			logger.debug(getClass().getSimpleName()+" --------------------------------------");
-			logger.debug(getClass().getSimpleName()+" ------------ Entry Object ------------");
-			logger.debug(getClass().getSimpleName()+" --------------------------------------");
-			logger.debug(getClass().getSimpleName()+" "+EntryList.get(i).toString());
-			logger.debug(getClass().getSimpleName()+" --------------------------------------");
-		}
 	}
 	
 	
