@@ -12,8 +12,8 @@ function TdClicker() {
     });
     $("button.tag").click(function (e) {
         e.preventDefault();
-        selectedLog = $(this).attr("id");           //Saves the Id of the selected LogEntry, for tagging
-        // console.log(selectedLog);
+        selectedLog = $(this).attr("id");           //Saves the Id of the sele
+
     });
     if (!isinit) {
         $(document).ready(function () {
@@ -87,7 +87,7 @@ function getPage(page) {
     var data;
     $.ajax({
         type: "get",
-        url: "http:/log/page/" + page,
+        url: "http::/log/page/" + page,
         data: {
             page: page,
             level: glevel,
@@ -340,7 +340,7 @@ $("#createTagForm").submit(function (e) {
     var tagName = $("#createTagInput").val();       //Extract tag name from input
     $.ajax({                                        //Send POST request server
         type: "POST",
-        url: "http:/tag",
+        url: "http:tag",
         contentType: "application/json",
         data: JSON.stringify({ tag: tagName }),
         dataType: "json",
@@ -363,7 +363,7 @@ $(".selectLogTag").change(function (e) {
     var text = $(this).find(":selected").text();    //get tag text
     $.ajax({
         type: "get",                                //send update request to the server
-        url: "http:/log/" + selectedLog + "/tag/" + newtag,
+        url: "http:log/" + selectedLog + "/tag/" + newtag,
         data: "data",
         dataType: "JSON",
         complete: function (response) {
@@ -389,7 +389,7 @@ $(".selectLogTag").change(function (e) {
 
 $.ajax({
     type: "get",
-    url: "http:/service",
+    url: "http:service",
     dataType: "json",
     success: function (response) {
         var select = $("#selectFile");
@@ -400,7 +400,7 @@ $.ajax({
 });
 $.ajax({
     type: "get",
-    url: "http:/log/thread",
+    url: "http:log/thread",
     dataType: "json",
     success: function (response) {
         var select = $("#selectThread");
@@ -411,7 +411,7 @@ $.ajax({
 });
 $.ajax({
     type: "get",
-    url: "http:/log/class",
+    url: "http:log/class",
     dataType: "json",
     success: function (response) {
         var select = $("#selectClass");
@@ -424,7 +424,7 @@ FillTagsSelect();
 function FillTagsSelect() {
     $.ajax({
         type: "get",
-        url: "http:/tag",
+        url: "http:tag",
         dataType: "json",
         success: function (response) {
             var select = $(".selectTag");

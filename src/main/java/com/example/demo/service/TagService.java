@@ -20,6 +20,12 @@ public class TagService implements TagDAO {
 	private EntityManager entityManagerFactor;
 	final static Logger logger = LoggerSingleton.getLoggerOBJ().getLoggerman();
 
+	
+	/**
+	 * {@inheritDoc}<br>
+	 * uses persist of entityManagerFactor to save to the database.
+	 * @see com.example.demo.dao.TagDAO#saveTag(com.example.demo.model.Tag)
+	 */
 	@Override
 	@Transactional
 	public void saveTag(Tag tag) {
@@ -32,12 +38,22 @@ public class TagService implements TagDAO {
 
 	}
 
+	/** 
+	 * {@inheritDoc}<br>
+	 * 
+	 * @see com.example.demo.dao.TagDAO#updateTag(com.example.demo.model.Tag)
+	 */
 	@Override
 	public void updateTag(Tag tag) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see com.example.demo.dao.TagDAO#findAllTags()
+	 */
 	@Override
 	public List<Tag> findAllTags() {
 		List<Tag> list = null;
@@ -51,6 +67,9 @@ public class TagService implements TagDAO {
 		return list;
 	}
 
+	/**{@inheritDoc}
+	 * @see com.example.demo.dao.TagDAO#findTagById(int)
+	 */
 	@Override
 	public Tag findTagById(int id) {
 		Tag tag = null;
@@ -63,6 +82,9 @@ public class TagService implements TagDAO {
 		return tag;
 	}
 
+	/**{@inheritDoc}
+	 * @see com.example.demo.dao.TagDAO#deleteTag(int)
+	 */
 	@Override
 	@Transactional
 	public void deleteTag(int id) {

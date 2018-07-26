@@ -1,0 +1,7 @@
+com.example.demo
+com.example.demo.controller
+com.example.demo.dao
+com.example.demo.factory
+com.example.demo.model
+com.example.demo.service
+com.example.demo.singleton

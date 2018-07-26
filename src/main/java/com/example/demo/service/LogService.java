@@ -25,6 +25,14 @@ import com.example.demo.model.LogEntryError;
 import com.example.demo.model.Tag;
 import com.example.demo.singleton.LoggerSingleton;
 
+
+/**
+ * Provides services for handling log entries, which include saving and finding in their various forms.
+ * Also has methods for parsing log files 
+ *
+ * @author Zakaria
+ * @see LogEntryDAO
+ */
 @Service
 public class LogService implements LogEntryDAO {
 
@@ -34,14 +42,15 @@ public class LogService implements LogEntryDAO {
 	private LogParserServies parser;
 	@Autowired
 	private TagService tagService;
+	
 	final static Logger logger = LoggerSingleton.getLoggerOBJ().getLoggerman();
-
-	/*
+	
+	
+	/**
+	 * {@inheritDoc}<br>
+	 * Uses entityManagerFactorto save the LogEntries, should deal with the polymorphism,
+	 * and save for both LogEntry and LogEntryError
 	 * @see com.example.demo.dao.LogEntryDAO#save(com.example.demo.model.LogEntry)
-	 * Saves the LogEntries, should in theory deal with the polymorphism
-	 */
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#save(com.example.demo.model.LogEntry)
 	 */
 	@Override
 	@Transactional
@@ -56,24 +65,13 @@ public class LogService implements LogEntryDAO {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#saveError(com.example.demo.model.LogEntryError)
-	 */
-	@Override
-	@Transactional
-	@Deprecated
-	public void saveError(LogEntryError entryError) {
-		try {
-			entityManagerFactor.persist(entryError);
-//			logger.info(getClass().getSimpleName()+" save(logEntry) executed Successfully");
-//			logger.debug("Persisted LogEntity: "+logEntry.toString());
-		} catch (Exception e) {
-			logger.error(getClass().getSimpleName() + " saveError(entryError) Failed, " + e.getMessage());
-		}
-	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#findAll()
+
+	/**
+	 * {@inheritDoc}<br>
+	 *  Uses createQuery of entityManagerFactor to query the database with :<br>
+	 *  		"select a from LogEntries a "
+	 * @see com.example.demo.dao.LogEntryDAO#findAll()
 	 */
 	@Override
 	public List<LogEntry> findAll() {
@@ -83,28 +81,36 @@ public class LogService implements LogEntryDAO {
 		} catch (Exception e) {
 			logger.error(getClass().getSimpleName() + " findAll() failed, " + e.getMessage());
 		}
-
 		return entries;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#findAllByThread(java.lang.String)
+
+	
+	
+	/**
+	 * {@inheritDoc}<br>
+	 * Uses createQuery of entityManagerFactor to query the database with :<br>
+	 *  		"select a from LogEntries a where a.process like :wantedThread"
+	 * @see com.example.demo.dao.LogEntryDAO#findAllByThread(java.lang.String)
 	 */
 	@Override
 	public List<LogEntry> findAllByThread(String thread) {
 		List<LogEntry> entries = null;
 		try {
 			entries = entityManagerFactor.createQuery("select a from LogEntries a where a.process like :wantedThread")
-					.setParameter("wantedThread", thread).getResultList();
+					.setParameter("wantedThread", thread).getResultList();				
 		} catch (Exception e) {
 			logger.error(getClass().getSimpleName() + " findAll() failed, " + e.getMessage());
 		}
-
 		return entries;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#findAllErrors()
+
+	/**
+	 * {@inheritDoc}<br>
+	 * Uses createQuery of entityManagerFactor to query the database with :<br>
+	 *  		"select a from LogEntryError a"
+	 * @see com.example.demo.dao.LogEntryDAO#findAllErrors()
 	 */
 	@Override
 	public List<LogEntryError> findAllErrors() {
@@ -119,49 +125,35 @@ public class LogService implements LogEntryDAO {
 		return entryErrors;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#findById(int)
+	/**
+	 * {@inheritDoc}<br>
+	 * Uses find of entityManagerFactor to query the database.
 	 */
 	@Override
 	public LogEntry findById(int id) {
 		LogEntry logEntry = null;
 		try {
-			logEntry = entityManagerFactor.find(LogEntry.class, id);
+			logEntry = entityManagerFactor.find(LogEntry.class, id);			//Specify return model type
 			logger.info(getClass().getSimpleName() + "  find(" + id + ") LogEntry Successfully ");
-//			logger.info(getClass().getSimpleName() + "  find(" + id + ") LogEntry Successfully "+logEntry.getTimestamp());
 		} catch (Exception e) {
 			logger.error(getClass().getSimpleName() + "  find(" + id + ") Failed. " + e.getMessage());
 		}
-
 		return logEntry;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#findErrorById(int)
-	 */
-	@Override
-	@Deprecated
-	public LogEntryError findErrorById(int id) {
-		//
-		LogEntryError entryError = null;
-		try {
-			entryError = entityManagerFactor.find(LogEntryError.class, id);
-		} catch (Exception e) {
-			logger.error(getClass().getSimpleName() + "  findErrorById(" + id + ") Failed. " + e.getMessage());
-		}
-		return entryError;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#parseLog(java.lang.String)
+	/**
+	 * {@inheritDoc}<br>
+	 * Uses LogParseServices to parse the log file, passing the filename.
 	 */
 	@Override
 	public void parseLog(String LogName) {
 		parser.Parse(LogName);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#saveAllEntries(java.util.List)
+	/**
+	 * {@inheritDoc}<br>
+	 * Iterates through the entry list, passing them to {@link #save(LogEntry)}, 
+	 * saving them to the database.
 	 */
 	@Override
 	@Transactional
@@ -172,17 +164,17 @@ public class LogService implements LogEntryDAO {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#findByRange(java.util.Date, java.util.Date)
+	/** 
+	 * {@inheritDoc}<br>
+	 * Create a Criteria Query, then adding restrictions less and greater for the max and min timestamp respectively.
 	 */
 	@Override
 	public List<LogEntry> findByRange(Date min, Date max) {
 		List<LogEntry> entries = null;
 		try {
-			Session sess = entityManagerFactor.unwrap(Session.class);
-			entries = sess.createCriteria(LogEntry.class).add(Restrictions.le("timestamp", max))
-					.add(Restrictions.ge("timestamp", min)).list();
-
+			Session sess = entityManagerFactor.unwrap(Session.class);				//Extracting Session object
+			entries = sess.createCriteria(LogEntry.class).add(Restrictions.le("timestamp", max))	
+					.add(Restrictions.ge("timestamp", min)).list();									//adding criteria restrictions
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error(getClass().getSimpleName() + "  findByRange() Failed. " + e.getMessage());
@@ -190,8 +182,11 @@ public class LogService implements LogEntryDAO {
 
 		return entries;
 	}
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#getThreadList()
+	/**
+	 * {@inheritDoc}<br>
+	 * Used to generate HTML selects for Threads from the front end.
+	 * Uses createQuery of entityManagerFactor to query the database with :<br>
+	 *  		"select a.process from LogEntries a group by a.process"
 	 */
 	@Override
 	public List<String> getThreadList(){
@@ -207,8 +202,11 @@ public class LogService implements LogEntryDAO {
 		return list;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#getClassList()
+	/**
+	 * {@inheritDoc}<br>
+	 * Used to generate HTML selects for Class from the front end.
+	 * Uses createQuery of entityManagerFactor to query the database with :<br>
+	 *  		"select a.className from LogEntries a group by a.className"
 	 */
 	@Override
 	public List<String> getClassList(){
@@ -225,8 +223,11 @@ public class LogService implements LogEntryDAO {
 
 
 	
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#getPage(int, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	
+	/**
+	 * {@inheritDoc}<br>
+	 * 	uses getCriteriaBuilder to build the query
+	 * @see com.example.demo.dao.LogEntryDAO#getPage(int, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<LogEntry> getPage(int page, String level,int file,String maxTime ,String minTime ,String thread, String className ) {
@@ -247,40 +248,47 @@ public class LogService implements LogEntryDAO {
 				
 				//Creating all the constraints and filters
 				List <Predicate> p = new ArrayList<Predicate> ();
-				if (level !=null && !level.isEmpty()) {
-					p.add(builder.and(builder.like(myRoot.get("level"), level)));
+				
+				if (level !=null && !level.isEmpty()) {											//if level filter specified
+					p.add(builder.and(builder.like(myRoot.get("level"), level)));				//add restriction 
 				}
-				if (thread !=null && !thread.isEmpty()) {
-					p.add(builder.and(builder.like(myRoot.get("process"), thread)));
+				
+				if (thread !=null && !thread.isEmpty()) {										//if thread filter specified
+					p.add(builder.and(builder.like(myRoot.get("process"), thread)));			//add restriction 
 				}
-				if (className !=null && !className.isEmpty()) {
-					p.add(builder.and(builder.like(myRoot.get("className"), className)));
+				
+				if (className !=null && !className.isEmpty()) {									//if class filter specified
+					p.add(builder.and(builder.like(myRoot.get("className"), className)));		//add restriction 
+				}	
+				
+				if(file > 0) {																	//if service file filter specified
+					p.add(builder.and(builder.equal(myRoot.get("service").get("id"), file)));	//add restriction 
 				}
-				if(file > 0) {
-					p.add(builder.and(builder.equal(myRoot.get("service").get("id"), file)));
-				}
-				if(minTime!= null && !minTime.isEmpty()) {
+				
+				if(minTime!= null && !minTime.isEmpty()) {										//if min timestamp filter specified
 					logger.info(getClass().getSimpleName()+" minTime = "+minTime);
-					LogEntry min = new LogEntry(minTime,"","","","");
-					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+					LogEntry min = new LogEntry(minTime,"","","","");							//Use LogEntry to format the date
+					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");//Format timestamp with milliseconds
 					logger.info(getClass().getSimpleName()+" minTime = "+formater.format(min.getTimestamp())+","+min.getmSec());
-					
+																								//add restriction 
 					p.add(builder.and(builder.greaterThanOrEqualTo(myRoot.<Date>get("timestamp"), min.getTimestamp())));
 				}
-				if(maxTime!= null && !maxTime.isEmpty()) {
+				
+				if(maxTime!= null && !maxTime.isEmpty()) {										//if max timestamp filter specified
 					logger.info(getClass().getSimpleName()+" maxTime = "+maxTime);
-					LogEntry max = new LogEntry(maxTime,"","","","");
-					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+					LogEntry max = new LogEntry(maxTime,"","","","");							//Use LogEntry to format the date
+					SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");//Format timestamp with milliseconds
 					logger.info(getClass().getSimpleName()+" maxTime = "+formater.format(max.getTimestamp())+","+max.getmSec());
-					
+																								//add restriction 
 					p.add(builder.and(builder.lessThanOrEqualTo(myRoot.<Date>get("timestamp"), max.getTimestamp())));
 				}
-				Predicate[] pr = new Predicate[p.size()];
+				
+				//Convert ArrayList to normal array
+				Predicate[] pr = new Predicate[p.size()];									
 				
 				//finish the query and return the result
 				criteria.select(myRoot).where(p.toArray(pr));
 				entries = entityManagerFactor.createQuery(criteria).setFirstResult(offset).setMaxResults(limit).getResultList();
-//				logger.info(getClass().getSimpleName()+" QUery"+entityManagerFactor.createQuery(criteria).);
 				logger.info(getClass().getSimpleName() + " getPage(" + page + ") executed successfully, returned "
 						+ entries.size()+" entries");
 			} catch (Exception e) {
@@ -290,8 +298,11 @@ public class LogService implements LogEntryDAO {
 		return entries;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#addTag(int, int)
+	/**
+	 * {@inheritDoc}<br>
+	 * uses {@link TagService#findTagById(int)} to get the Tag, and 
+	 * {@link #findById(int)} to get the log entry. The tag is then added to the 
+	 * logEntry then updated back to the database.
 	 */
 	@Override
 	@Transactional
@@ -299,10 +310,10 @@ public class LogService implements LogEntryDAO {
 		Tag tag= null;
 		LogEntry entry = null;
 		try {
-			tag = tagService.findTagById(tagId);
-			entry = this.findById(logId);
-			entry.setTag(tag);
-			this.save(entry);
+			tag = tagService.findTagById(tagId);					//Get tag from ID
+			entry = this.findById(logId);							//Get log entry by ID
+			entry.setTag(tag);										//Add the tag
+			this.save(entry);										//Update database
 			logger.info(getClass().getSimpleName()+"addTag("+logId+" , "+tagId+") executed successfully");
 		} catch (Exception e) {
 			logger.info(getClass().getSimpleName()+"addTag("+logId+" , "+tagId+") Failed, "+e.getMessage());
@@ -310,17 +321,19 @@ public class LogService implements LogEntryDAO {
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see com.example.demo.service.ss#removeTag(int)
+	/**
+	 * {@inheritDoc}<br>
+	 * Uses {@link #findById(int)} to get the log entry. 
+	 * sets the Tag value to null and update the database.
 	 */
 	@Override
 	@Transactional
 	public void removeTag(int logId) {
 		LogEntry entry = null;
 		try {
-			entry = this.findById(logId);
-			entry.setTag(null);
-			this.save(entry);
+			entry = this.findById(logId);							//Get log entry
+			entry.setTag(null);										//remove tag
+			this.save(entry);										//update database
 			logger.info(getClass().getSimpleName()+"removeTag("+logId+") executed successfully");
 		} catch (Exception e) {
 			logger.info(getClass().getSimpleName()+"removeTag("+logId+") failed,  "+e.getMessage());

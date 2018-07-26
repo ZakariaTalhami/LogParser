@@ -24,6 +24,10 @@ public class ServiceService implements ServiceDAO {
 	@Autowired
 	private EntityManager entityManager;
 
+	/**
+	 * {@inheritDoc}
+	 * @see com.example.demo.dao.ServiceDAO#saveService(com.example.demo.model.ServiceModel)
+	 */
 	@Override
 	@Transactional
 	public void saveService(ServiceModel service) {
@@ -36,6 +40,10 @@ public class ServiceService implements ServiceDAO {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see com.example.demo.dao.ServiceDAO#findAll()
+	 */
 	@Override
 	public List<ServiceModel> findAll() {
 		List<ServiceModel> model = null;
@@ -48,6 +56,10 @@ public class ServiceService implements ServiceDAO {
 		return model;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see com.example.demo.dao.ServiceDAO#findById(int)
+	 */
 	@Override
 	public ServiceModel findById(int id) {
 		ServiceModel model = null;
@@ -60,6 +72,11 @@ public class ServiceService implements ServiceDAO {
 		return model;
 	}
 
+	
+	/** 
+	 * {@inheritDoc}
+	 * @see com.example.demo.dao.ServiceDAO#findByName(java.lang.String)
+	 */
 	@Override
 	public ServiceModel findByName(String name) {
 		List<ServiceModel> model = null;
@@ -75,7 +92,12 @@ public class ServiceService implements ServiceDAO {
 		}
 		return model.get(0);
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 * @see com.example.demo.dao.ServiceDAO#exist(java.lang.String)
+	 */
+	@Override
 	public boolean exist(String name) {
 		boolean found = false;
 		int count = 0;
@@ -93,25 +115,33 @@ public class ServiceService implements ServiceDAO {
 		return found;
 	}
 
+	/**
+	 * {@inheritDoc}<br>
+	 * Uses the {@link File} class to get the list of files in the log folder, the files are check to be folder or file.
+	 * files are checked if they already exist in the database if so they are skip, else they are added to the database.
+	 * Folders are also skipped at the moment
+	 * @see com.example.demo.dao.ServiceDAO#updateServiceList()
+	 */
+	@Override
 	@Transactional
 	public List<ServiceModel> updateServiceList() {
 		List<ServiceModel> list = null;
 		String fileName = "";
 		try {
 			File folder = new File("log");
-			File[] fileList = folder.listFiles();
+			File[] fileList = folder.listFiles();								//get file list
 			for (int i = 0; i < fileList.length; i++) {
-				fileName = fileList[i].getName().split("\\.")[0];
-				if (fileList[i].isFile()) {
-					if (!exist(fileName)) {
-						saveService(new ServiceModel(fileName));
+				fileName = fileList[i].getName().split("\\.")[0];				//remove extension
+				if (fileList[i].isFile()) {											//check if not folder
+					if (!exist(fileName)) {												//check database for the file
+						saveService(new ServiceModel(fileName));							//add to database
 						logger.info(getClass().getSimpleName() + " updateServiceList() executed successfully, returned "
 								+ fileName);
-					} else {
+					} else {															//Exists, skip
 						logger.warn(getClass().getSimpleName()
 								+ " updateServiceList() executed successfully, file already exits " + fileName);
 					}
-				} else if (fileList[i].isDirectory()) {
+				} else if (fileList[i].isDirectory()) {								//Folder, skip
 					/*
 					 * Can make it recursive and let it cascade through the directories
 					 */

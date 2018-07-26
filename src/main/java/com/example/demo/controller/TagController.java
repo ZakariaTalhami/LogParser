@@ -23,12 +23,23 @@ public class TagController {
 
 	final static Logger logger = LoggerSingleton.getLoggerOBJ().getLoggerman();
 
+	
+	/**
+	 * Used by front end to insert new custom Tag
+	 * 
+	 * @param tag Tag model to be saved in request body
+	 */
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public void saveTag(@RequestBody Tag tag) {
 		logger.info(getClass().getSimpleName() + " Entered SaveTag(tag)");
 		tagService.saveTag(tag);
 	}
 
+	/**
+	 * Returns List of all Tags, used by front end to construct the Tag selects for filers and tagging logs.
+	 * 
+	 * @return List of all tags as JSON
+	 */
 	@RequestMapping(value = "")
 	public List<Tag> findAllTags() {
 
@@ -36,12 +47,20 @@ public class TagController {
 		return tagService.findAllTags();
 	}
 
+	/**
+	 * 
+	 * @param id Tag ID
+	 * @return	JSON of Tag details
+	 */
 	@RequestMapping(value = "/{id}")
 	public Tag findTagById(@PathVariable int id) {
 		logger.info(getClass().getSimpleName() + " Entered findTagById(" + id + ")");
 		return tagService.findTagById(id);
 	}
 
+	/**
+	 * @param id Tag ID to be deleted in url path
+	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public void deleteTag(@PathVariable int id) {
 		logger.info(getClass().getSimpleName() + " Entered deleteTag(" + id + ")");

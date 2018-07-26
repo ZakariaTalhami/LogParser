@@ -31,7 +31,7 @@ public class LogEntryFactory {
 	 * 
 	 * @param buffer array that must have 6 elements { timeStamp , level , process , object , message , exception}
 	 * @param serviceId The Id of the Service (File) that generated the log entry
- 	 * @return a {@link LogEnry} or {@link LogEntryError} depending on logs level value
+ 	 * @return a {@link LogEntry} or {@link LogEntryError} depending on logs level value
 	 */
 	public LogEntry getLogEntry(String[] buffer,int serviceId) {
 		LogEntry logEntry = null;
@@ -55,7 +55,7 @@ public class LogEntryFactory {
 				logEntry=null;							
 				break;
 			}
-		}
+		} 
 		return logEntry;
 	}
 }
