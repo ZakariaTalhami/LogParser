@@ -13,3 +13,8 @@
 ***
 #### Database ER diagram:
 ![Database ER diagram](/docs/DB.png)
+
+
+### Class Diagram
+
+![Class diagram](/docs/ClassDiagram.png)
